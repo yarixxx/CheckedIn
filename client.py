@@ -17,7 +17,12 @@ headers = {
     'accept': "application/vnd.collection+json",
     'content-type': "application/vnd.collection+json"
     }
-    
+
+def get_building_areas(building_id):
+    # Read building areas
+    response = requests.get("https://api.kone.com/api/building/%s/area" % building_id, headers=headers)
+    return response
+
 def publish_user(building_id, mac):
     with make_client(endpoint=endpoint, appkey=appkey) as client:
         print('Connected to Satori RTM!')
