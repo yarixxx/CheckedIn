@@ -79,7 +79,7 @@ def publish_lift(location):
                 response = get_deckstate_object(deckstate)
                 response = json.loads(response.content.decode('utf-8'))
                 for item in response["collection"]["items"][0]["data"]:
-                    if item["name"] == "level":
+                    if item["name"] == "longName":
                         decklevel = item["value"]
                         break
 
