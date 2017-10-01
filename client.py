@@ -18,6 +18,16 @@ headers = {
     'content-type': "application/vnd.collection+json"
     }
 
+def get_call_object(call_object_url):
+    # Read current call status
+    response = requests.get(call_object_url, headers=headers)
+    return response
+
+def get_deckstate_object(deckstate_object_url):
+    # Read current deckstate status
+    response = requests.get(deckstate_object_url, headers=headers)
+    return response
+
 def get_building_areas(building_id):
     # Read building areas
     response = requests.get("https://api.kone.com/api/building/%s/area" % building_id, headers=headers)
@@ -36,7 +46,7 @@ def publish_user(building_id, mac):
         message = {"building": building_id, 'user': mac}
         client.publish("channel1", message, callback=on_publish_ack)
     
-def publish_lift(call_object):
+def publish_lift(location):
     with make_client(endpoint=endpoint, appkey=appkey) as client:
         print('Connected to Satori RTM!')
 
@@ -50,7 +60,7 @@ def publish_lift(call_object):
         callstate=None
         decklevel=None
         while True:
-            response = get_call_object(call_object)
+            response = get_call_object(location)
             response = json.loads(response.content.decode('utf-8'))
             # Find the current callState value from the response
     
