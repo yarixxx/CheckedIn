@@ -162,7 +162,7 @@ def post_elevator_call(building_id):
     return response
 
 def get_suite_number():
-  items = [295, 376, 290, 640, 735, 896, 307]
+  items = [595, 576, 590, 540, 535, 596, 507]
   random.shuffle(items)
   return items[0]
 
