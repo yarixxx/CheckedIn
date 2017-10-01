@@ -97,11 +97,23 @@ def publish_lift(location):
             client.publish("channel2", message, callback=on_publish_ack)
             print ("Current callState=%s and deck level=%s" % (callstate, decklevel))
             if callstate == 7 or callstate == 8:
+		use_philips(decklevel)	
                 break
             time.sleep(1)
     
         print ("Elevator call has finished")
 
+def use_philips(decklevel):
+    #Use area 1002
+    areaId = 1002
+    buildingId = testbed
+    luminaireId = 1
+    
+    url = "https://profsystem-lighting-prod.apigee.net/poe/control/"+buildingId+"/applyLuminaireLevel/"+areaId+"/"+luminaireId+"/99"
+    headers = {"x-api-key": "KydvmhAfrPKPP4uGslpray4JN9SfXrOg"}
+    response = requests.put(url, data=None, headers=headers)
+    print("Philips ")
+    print(response)
 
 def post_elevator_call(building_id):
     #The floors to go FROM and TO
