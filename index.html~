@@ -59,7 +59,7 @@
         </md-card-title-text>
       </md-card-title>
       <md-card-content layout="column" layout-align="space-between" style="height:700px;width:300px">
-        <img src="kone.png" alt="Kone API">
+        <div><img src="kone.png" alt="Kone API"></div>
         <p>Level: <b>{{ elevator.level }}</b></p>
         <p>State: <b>{{ elevator.status }}</b></p>
         <div flex></div>
