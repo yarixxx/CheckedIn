@@ -30,8 +30,40 @@ def publish_user(building_id, mac):
 
         message = {"building": building_id, 'user': mac}
         client.publish("channel1", message, callback=on_publish_ack)
+    
+def publish_lift(location):
+    with make_client(endpoint=endpoint, appkey=appkey) as client:
+        print('Connected to Satori RTM!')
 
-def post_elevator_call(building_id, from_area, to_area):
+        def on_publish_ack(pdu):
+            if pdu['action'] == 'rtm/publish/ok':
+                print('Publish of location confirmed')
+            else:
+                print('Failed to publish location. RTM replied with the error {0}: {1}'.format(pdu['body']['error'], pdu['body']['reason']))
+
+        client.publish("channel2", location, callback=on_publish_ack)
+
+def post_elevator_call(building_id):
+    #The floors to go FROM and TO
+    from_floor = 1
+    to_floor = 5
+
+    # Read buliding areas
+    response = get_building_areas(building_id)
+    response = json.loads(response.content.decode('utf-8'))
+    areas_list = response["collection"]["items"]
+
+    floors = {}
+
+    areas_len = len(areas_list)
+    for i in range(0, areas_len):
+        for item in areas_list[i]["data"]:
+            if item["name"] == "id":
+                floors[i] = item["value"]
+
+    first_area = floors[from_floor]
+    second_area = floors[to_floor]
+
     payload = """{
         "template": {
             "data": [
@@ -39,7 +71,7 @@ def post_elevator_call(building_id, from_area, to_area):
                 {"name":"destinationAreaId", "value": "%s"}
             ]
         }
-    }""" % (from_area, to_area)
+    }""" % (first_area, second_area)
     response = requests.post("https://api.kone.com/api/building/%s/call" % building_id, headers=headers, data=payload)
     return response
 
@@ -58,6 +90,7 @@ while True:
 	for mac, name in nearby_devices:
 		if mac in booked_clients:
 			print 'call lift for %s' % name
-			post_elevator_call(building_id,0,1)
+			lift = post_elevator_call(building_id)
 			publish_user(building_id, mac)
+			publish_lift(lift.headers["Location"])
 			print 'success'
