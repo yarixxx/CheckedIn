@@ -45,7 +45,7 @@
           <span class="md-headline">Guest</span>
         </md-card-title-text>
       </md-card-title>
-      <md-card-content layout="column" layout-align="space-between" style="height:700px;width:300px">
+      <md-card-content layout="column" layout-align="space-between" style="height:700px">
         <img alt="{{ checkedUser.name }}" ng-src="{{ checkedUser.img }}" class="md-avatar" />
         <p>{{ checkedUser.name }}</p>
         <div flex></div>
@@ -98,6 +98,24 @@
       </md-card-content>
     </md-card>
 
+    <md-card>
+      <md-card-title>
+        <md-card-title-text>
+          <span class="md-headline">Path Lights (Philips API)</span>
+        </md-card-title-text>
+      </md-card-title>
+      <md-card-content layout="column" layout-align="space-between" style="height:700px;width:300px">
+        <div layout="column" style="width:200px">
+          <div style="font-size:18px;text-align:center"><b>Corridor Light:</b></div>
+          <span flex></span>
+          <md-icon style="font-size: 48px;height:48px"
+            ng-show="philipsLight"
+            class="light-on">wb_incandescent</md-icon>
+        </div>
+        
+        <div flex></div>
+      </md-card-content>
+    </md-card>
   
   </md-content>
   <script src="app.js"></script>

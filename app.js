@@ -35,6 +35,7 @@ CheckinIn.controller('CheckinInCtrl', function($scope, $mdDialog, $mdToast, $mdS
     usersCheckinChannel = subscribe_to_user();
     elevatorChannel = subscribe_to_elevator();
     temperatureChannel = subscribe_to_temperature();
+    subscribe_to_philips()
   });
   client.start();
 
@@ -81,6 +82,20 @@ CheckinIn.controller('CheckinInCtrl', function($scope, $mdDialog, $mdToast, $mdS
         level: (pdu.body.messages[0].deckLevel - 3000) / 3000,
         status: elevatorStatuses[pdu.body.messages[0].callState]
       };
+      $scope.$digest();
+    });
+  };
+  
+  function subscribe_to_philips() {
+    var philipsData = client.subscribe('channel4', RTM.SubscriptionMode.SIMPLE);
+    console.log('subscribeToPhilips')
+    philipsData.on('enter-subscribed', function () {
+      console.log('Subscribed to: ' + philipsData.subscriptionId);
+    });
+
+    philipsData.on('rtm/subscription/data', function(pdu) {
+      console.log('philips', pdu.body.messages);
+      $scope.philipsLight = pdu.body.messages[0].philips
       $scope.$digest();
     });
   };
