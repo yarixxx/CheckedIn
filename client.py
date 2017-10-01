@@ -36,7 +36,7 @@ def publish_user(building_id, mac):
         message = {"building": building_id, 'user': mac}
         client.publish("channel1", message, callback=on_publish_ack)
     
-def publish_lift(location):
+def publish_lift(call_object):
     with make_client(endpoint=endpoint, appkey=appkey) as client:
         print('Connected to Satori RTM!')
 
@@ -46,7 +46,42 @@ def publish_lift(location):
             else:
                 print('Failed to publish location. RTM replied with the error {0}: {1}'.format(pdu['body']['error'], pdu['body']['reason']))
 
-        client.publish("channel2", location, callback=on_publish_ack)
+        # Follow the call until it is completed (7) or cancelled (8)
+        callstate=None
+        decklevel=None
+        while True:
+            response = get_call_object(call_object)
+            response = json.loads(response.content.decode('utf-8'))
+            # Find the current callState value from the response
+    
+            for item in response["collection"]["items"][0]["data"]:
+                if item["name"] == "callState":
+                    callstate = item["value"]
+                    break
+            # Find information where the elevator is
+            for item in response["collection"]["links"]:
+                if item["rel"] == "deckstate item":
+                    deckstate = item["href"]
+                    break
+        
+            # Call object itself is created immediately, but callState will be available shortly after call creation. It is an async call.
+            if callstate:
+                response = get_deckstate_object(deckstate)
+                response = json.loads(response.content.decode('utf-8'))
+                for item in response["collection"]["items"][0]["data"]:
+                    if item["name"] == "level":
+                        decklevel = item["value"]
+                        break
+
+            message = {"callState": callstate, "deckLevel": decklevel} 
+            client.publish("channel2", message, callback=on_publish_ack)
+            print ("Current callState=%s and deck level=%s" % (callstate, decklevel))
+            if callstate == 7 or callstate == 8:
+                break
+            time.sleep(1)
+    
+        print ("Elevator call has finished")
+
 
 def post_elevator_call(building_id):
     #The floors to go FROM and TO
