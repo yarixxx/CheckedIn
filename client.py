@@ -109,7 +109,7 @@ def post_elevator_call(building_id):
     for i in range(0, areas_len):
         for item in areas_list[i]["data"]:
             if item["name"] == "id":
-                floors[i] = item["value"]
+                floors[i-1] = item["value"]
 
     first_area = floors[from_floor]
     second_area = floors[to_floor]
