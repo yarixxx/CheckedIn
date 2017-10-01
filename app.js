@@ -16,7 +16,7 @@ CheckinIn.controller('CheckinInCtrl', function($scope, $mdDialog, $mdToast, $mdS
   
   var usersInto = {
     '64:BC:0C:E8:6D:4D': {
-      name: 'Sergei',
+      name: 'Sergiy',
       img: 'http://res.cloudinary.com/ideation/image/upload/c_thumb,g_face,c_fill,r_max,h_90,w_90/ahd9omvdvwi7t7xljmmy.jpg'
     },
     'F0:DB:E2:F2:D4:59': {

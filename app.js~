@@ -11,14 +11,7 @@ CheckinIn.controller('CheckinInCtrl', function($scope, $mdDialog, $mdToast, $mdS
   var usersCheckinChannel;
   var elevatorChannel;
   var temperatureChannel;
-  
-  $scope.room = {
-    bathroomLight: false,
-    generalLight: false,
-    temperature: 66,
-    suite: 354
-  }
-  
+
   var elevatorStatuses = ['acknowledged', 'registered', 'assigned', 'being fixed', 'fixed', 'being served', 'served soon', 'served (call handling ends)', 'canceled (call handling ends)', 'reassigned']
   
   var usersInto = {
