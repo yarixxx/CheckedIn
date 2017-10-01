@@ -65,7 +65,7 @@ def publish_philips(decklevel):
             else:
                 print('Failed to publish Philips. RTM replied with the error {0}: {1}'.format(pdu['body']['error'], pdu['body']['reason']))
 
-        message = {"building": building_id, "decklevel": decklevel}
+        message = {"decklevel": decklevel, "philips": "on"}
         client.publish("channel4", message, callback=on_publish_ack)
     
 def publish_lift(location):
