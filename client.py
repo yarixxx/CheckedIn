@@ -56,6 +56,18 @@ def publish_user(building_id, mac, suite_number):
         message = {"building": building_id, 'user': mac, 'suite_number': suite_number}
         client.publish("channel1", message, callback=on_publish_ack)
     
+def publish_philips(decklevel):
+    with make_client(endpoint=endpoint, appkey=appkey) as client:
+
+        def on_publish_ack(pdu):
+            if pdu['action'] == 'rtm/publish/ok':
+                print('Publish Philips confirmed')
+            else:
+                print('Failed to publish Philips. RTM replied with the error {0}: {1}'.format(pdu['body']['error'], pdu['body']['reason']))
+
+        message = {"decklevel": decklevel, "philips": "on"}
+        client.publish("channel4", message, callback=on_publish_ack)
+    
 def publish_lift(location):
     with make_client(endpoint=endpoint, appkey=appkey) as client:
         print('Connected to Satori RTM!')
@@ -97,7 +109,8 @@ def publish_lift(location):
             client.publish("channel2", message, callback=on_publish_ack)
             print ("Current callState=%s and deck level=%s" % (callstate, decklevel))
             if callstate == 7 or callstate == 8:
-		use_philips(decklevel)	
+		use_philips(decklevel)
+		publish_philips(decklevel)
                 break
             time.sleep(1)
     
@@ -149,7 +162,7 @@ def post_elevator_call(building_id):
     return response
 
 def get_suite_number():
-  items = [295, 376, 290, 640, 735, 896, 307]
+  items = [595, 576, 590, 540, 535, 596, 507]
   random.shuffle(items)
   return items[0]
 
