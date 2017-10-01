@@ -103,6 +103,7 @@ def publish_lift(location):
     
         print ("Elevator call has finished")
 
+
 def use_philips(decklevel):
     #Use area 1002
     areaId = "1002"
@@ -110,10 +111,10 @@ def use_philips(decklevel):
     luminaireId = "1"
     
     url = "https://profsystem-lighting-prod.apigee.net/poe/control/"+buildingId+"/applyLuminaireLevel/"+areaId+"/"+luminaireId+"/99"
-    headers = {"x-api-key": "KydvmhAfrPKPP4uGslpray4JN9SfXrOg"}
-    response = requests.put(url, data=None, headers=headers)
+    headers = {"x-api-key": "KydvmhAfrPKPP4uGslpray4JN9SfXrOg", "Authorization": "Basic SGFja2F0aG9uVXNlcjpIYWNrYXRob24xMjM="}
+    response = requests.put(url, headers=headers)
     print("Philips ")
-    print(response)
+    print(response.content.decode('utf-8'))
 
 def post_elevator_call(building_id):
     #The floors to go FROM and TO
