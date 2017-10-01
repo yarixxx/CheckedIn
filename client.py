@@ -9,7 +9,7 @@ client_secret="H7xS3yK2oS3uO0hU4xL5dQ4aI6rL7kC8cJ5uG2lM6cW8fM7tV2"
 building_id=9990000508
 
 endpoint = "wss://n0cy74ab.api.satori.com"
-appkey = "CF1EDbdeFC3aC712Ac8cAB5bbdDF8fdB
+appkey = "CF1EDbdeFC3aC712Ac8cAB5bbdDF8fdB"
 
 headers = {
     'x-ibm-client-id': client_id,
@@ -22,19 +22,14 @@ def publish_user(building_id, mac):
     with make_client(endpoint=endpoint, appkey=appkey) as client:
         print('Connected to Satori RTM!')
 
-        while True:
+        def on_publish_ack(pdu):
+            if pdu['action'] == 'rtm/publish/ok':
+                print('Publish confirmed')
+            else:
+                print('Failed to publish. RTM replied with the error {0}: {1}'.format(pdu['body']['error'], pdu['body']['reason']))
 
-            def on_publish_ack(pdu):
-                if pdu['action'] == 'rtm/publish/ok':
-                    print('Publish confirmed')
-                else:
-                    print(
-                        'Failed to publish. '
-                        'RTM replied with the error {0}: {1}'.format(
-                            pdu['body']['error'], pdu['body']['reason']))
-
-            message = {"building": building_id, 'user': mac}
-            client.publish(u"checkins", message, callback=on_publish_ack)
+        message = {"building": building_id, 'user': mac}
+        client.publish("channel1", message, callback=on_publish_ack)
 
 def post_elevator_call(building_id, from_area, to_area):
     payload = """{
@@ -64,4 +59,5 @@ while True:
 		if mac in booked_clients:
 			print 'call lift for %s' % name
 			post_elevator_call(building_id,0,1)
-		  publish_user(building_id, name)
+			publish_user(building_id, mac)
+			print 'success'
