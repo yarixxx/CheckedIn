@@ -66,6 +66,26 @@
       </md-card-content>
     </md-card>
     
+    
+    <md-card ng-show="philipsLight">
+      <md-card-title>
+        <md-card-title-text>
+          <span class="md-headline">Path Lights (Philips API)</span>
+        </md-card-title-text>
+      </md-card-title>
+      <md-card-content layout="column" layout-align="space-between" style="height:700px;width:300px">
+        <div><img src="philips.png" alt="Kone API"></div>
+        <div layout="column" style="width:200px">
+          <div style="font-size:18px;text-align:center"><b>Corridor Light:</b></div>
+          <span flex></span>
+          <md-icon style="font-size: 48px;height:48px"
+            class="light-on">wb_incandescent</md-icon>
+        </div>
+        
+        <div flex></div>
+      </md-card-content>
+    </md-card>
+    
      <md-card ng-show="room">
       <md-card-title>
         <md-card-title-text>
@@ -99,24 +119,6 @@
       </md-card-content>
     </md-card>
 
-    <md-card ng-show="philipsLight">
-      <md-card-title>
-        <md-card-title-text>
-          <span class="md-headline">Path Lights (Philips API)</span>
-        </md-card-title-text>
-      </md-card-title>
-      <md-card-content layout="column" layout-align="space-between" style="height:700px;width:300px">
-        <div><img src="philips.png" alt="Kone API"></div>
-        <div layout="column" style="width:200px">
-          <div style="font-size:18px;text-align:center"><b>Corridor Light:</b></div>
-          <span flex></span>
-          <md-icon style="font-size: 48px;height:48px"
-            class="light-on">wb_incandescent</md-icon>
-        </div>
-        
-        <div flex></div>
-      </md-card-content>
-    </md-card>
   
   </md-content>
   <script src="app.js"></script>
