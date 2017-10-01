@@ -1,8 +1,12 @@
 import bluetooth
+import RPi.GPIO as GPIO
+import random
 import json
 import time
 import requests
 from satori.rtm.client import make_client
+
+welcome_pin = 18
 
 client_id="a2fd64e4-0d67-4545-b353-475f14123ee0"
 client_secret="H7xS3yK2oS3uO0hU4xL5dQ4aI6rL7kC8cJ5uG2lM6cW8fM7tV2"
@@ -17,6 +21,12 @@ headers = {
     'accept': "application/vnd.collection+json",
     'content-type': "application/vnd.collection+json"
     }
+
+def switch_on_pin(led_pin):
+	GPIO.setmode(GPIO.BCM)
+        GPIO.setup(led_pin, GPIO.OUT, initial=GPIO.HIGH)
+        GPIO.output(led_pin, GPIO.LOW)
+
 
 def get_call_object(call_object_url):
     # Read current call status
@@ -33,7 +43,7 @@ def get_building_areas(building_id):
     response = requests.get("https://api.kone.com/api/building/%s/area" % building_id, headers=headers)
     return response
 
-def publish_user(building_id, mac):
+def publish_user(building_id, mac, suite_number):
     with make_client(endpoint=endpoint, appkey=appkey) as client:
         print('Connected to Satori RTM!')
 
@@ -43,7 +53,7 @@ def publish_user(building_id, mac):
             else:
                 print('Failed to publish. RTM replied with the error {0}: {1}'.format(pdu['body']['error'], pdu['body']['reason']))
 
-        message = {"building": building_id, 'user': mac}
+        message = {"building": building_id, 'user': mac, 'suite_number': suite_number}
         client.publish("channel1", message, callback=on_publish_ack)
     
 def publish_lift(location):
@@ -125,6 +135,10 @@ def post_elevator_call(building_id):
     response = requests.post("https://api.kone.com/api/building/%s/call" % building_id, headers=headers, data=payload)
     return response
 
+def get_suite_number():
+  items = [295, 376, 290, 640, 735, 896, 307]
+  random.shuffle(items)
+  return items[0]
 
 
 
@@ -139,8 +153,10 @@ while True:
 	nearby_devices = bluetooth.discover_devices(lookup_names=True)
 	for mac, name in nearby_devices:
 		if mac in booked_clients:
+			switch_on_pin(welcome_pin)
+			suite_number = get_suite_number()
 			print 'call lift for %s' % name
 			lift = post_elevator_call(building_id)
-			publish_user(building_id, mac)
+			publish_user(building_id, mac, suite_number)
 			publish_lift(lift.headers["Location"])
 			print 'success'
