@@ -106,7 +106,7 @@ def publish_lift(location):
 def use_philips(decklevel):
     #Use area 1002
     areaId = 1002
-    buildingId = testbed
+    buildingId = "testbed"
     luminaireId = 1
     
     url = "https://profsystem-lighting-prod.apigee.net/poe/control/"+buildingId+"/applyLuminaireLevel/"+areaId+"/"+luminaireId+"/99"
