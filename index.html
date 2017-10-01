@@ -19,6 +19,12 @@
     
     <!-- Satori Library -->
     <script src="https://satori-a.akamaihd.net/satori-rtm-sdk/v1.1.1/sdk.min.js"></script>
+    
+    <style>
+      .light-on {
+        color: yellow;
+      }
+    </style>
 
 </head>
 <body ng-app="CheckinIn" layout="column" ng-controller="CheckinInCtrl as CheckinInCtrl">
@@ -28,18 +34,70 @@
         <md-icon>check</md-icon>
       </md-button>
 
-      <h2 flex md-truncate>Checking monitor</h2>
+      <h2 flex md-truncate>Checking Inn. with smart KONE Elevator</h2>
     </div>
   </md-toolbar>
-  <md-content class="md-padding">
-  
-  <md-list>
-    <md-subheader class="md-no-sticky">Users</md-subheader>
-    <md-list-item ng-repeat="user in checkedUsers">
-      <img alt="{{ user.name }}" ng-src="{{ user.img }}" class="md-avatar" />
-      <p>{{ user.name }}</p>
-    </md-list-item>
-  </md-list>
+  <md-content class="md-padding" layout="row">
+
+    <md-card ng-show="checkedUser">
+      <md-card-title>
+        <md-card-title-text>
+          <span class="md-headline">Guest</span>
+        </md-card-title-text>
+      </md-card-title>
+      <md-card-content layout="column" layout-align="space-between" style="height:700px">
+        <img alt="{{ checkedUser.name }}" ng-src="{{ checkedUser.img }}" class="md-avatar" />
+        <p>{{ checkedUser.name }}</p>
+        <div flex></div>
+      </md-card-content>
+    </md-card>
+    
+    <md-card ng-show="elevator">
+      <md-card-title>
+        <md-card-title-text>
+          <span class="md-headline">Elevator</span>
+        </md-card-title-text>
+      </md-card-title>
+      <md-card-content layout="column" layout-align="space-between" style="height:700px;width:300px">
+        <p>Level: <b>{{ elevator.level }}</b></p>
+        <p>State: <b>{{ elevator.status }}</b></p>
+        <div flex></div>
+      </md-card-content>
+    </md-card>
+    
+     <md-card ng-show="room">
+      <md-card-title>
+        <md-card-title-text>
+          <span class="md-headline">Room</span>
+        </md-card-title-text>
+      </md-card-title>
+      <md-card-content layout="column" layout-align="space-between" style="height:700px;width:300px">
+        <p style="font-size:18px"><b>1 Bedroom Suite</b></p>
+        <p style="font-size:18px">Room Number: <b>{{ room.suite }}</b></p>
+        
+        <p style="font-size:18px">Temperature: <b>{{ room.temperature }}</b></p>
+        
+        <div layout="column" style="width:200px">
+          <div style="font-size:18px;text-align:center"><b>General Light:</b></div>
+          <span flex></span>
+          <md-icon style="font-size: 48px;height:48px"
+            ng-show="room.generalLight"
+            class="light-on"
+            aria-label="{{ room.generalLight }}">wb_incandescent</md-icon>
+        </div>
+        
+        <div layout="column" style="width:200px">
+          <div style="font-size:18px;text-align:center"><b>Light in bathroom:</b></div>
+          <span flex></span>
+          <md-icon style="font-size: 48px;height:48px"
+            ng-show="room.bathroomLight"
+            class="light-on"
+            aria-label="{{ room.bathroomLight }}">wb_incandescent</md-icon>
+        </div>
+        <div flex></div>
+      </md-card-content>
+    </md-card>
+
   
   </md-content>
   <script src="app.js"></script>
